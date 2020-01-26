@@ -1,0 +1,39 @@
+package bg.sofia.uni.fmi.ai.emotion.core.preprocessing;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class Standardizer {
+    public static List<Double> standardizeData(List<Integer> pixels) {
+        List<Double> newPixels = new LinkedList<>();
+        double mean = mean(pixels);
+        double deviation = standardDeviation(pixels);
+
+        for (int i = 0; i < pixels.size(); i++) {
+            newPixels.add((pixels.get(i) - mean) / deviation);
+        }
+
+        return newPixels;
+    }
+
+    private static double mean(List<Integer> pixels) {
+        return pixels.stream().mapToInt(Integer::intValue).sum() / pixels.size();
+    }
+
+    private static double meanDouble(List<Double> pixels) {
+        return pixels.stream().mapToDouble(Double::doubleValue).sum() / pixels.size();
+    }
+
+    private static double standardDeviation(List<Integer> pixels) {
+        double mean = mean(pixels);
+        List<Double> newPixels = new LinkedList<>();
+
+        for (int i = 0; i < pixels.size(); i++) {
+            newPixels.add(Math.pow(pixels.get(i) - mean, 2));
+        }
+
+        double newMean = meanDouble(newPixels);
+
+        return Math.sqrt(newMean);
+    }
+}
